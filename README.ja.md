@@ -1,6 +1,6 @@
 # SpineVExt · 動画から Spine ボーンアニメーションへ
 
-[中文](README.md) · [English](README.en.md) · **日本語**
+[中文](README.zh-CN.md) · [English](README.md) · **日本語**
 
 プロジェクト名は **`video2spine-spinevext-web-cli`**（`video2spine` が役割、`spinevext` は原版ツールへの
 オマージュ、`web-cli` は Web とコマンドラインの両方を提供することを表します）。

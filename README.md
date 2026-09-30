@@ -1,123 +1,131 @@
-# SpineVExt · 视频转 Spine 骨骼动画
+# SpineVExt · video → Spine skeletal animation
 
-**中文** · [English](README.en.md) · [日本語](README.ja.md)
+[中文](README.zh-CN.md) · **English** · [日本語](README.ja.md)
 
-项目名 **`video2spine-spinevext-web-cli`**（三段的含义：`video2spine` 是它干的事、
-`spinevext` 致敬原版工具、`web-cli` 是它同时提供网页与命令行两种形态）。
+Project name: **`video2spine-spinevext-web-cli`** — `video2spine` is what it does, `spinevext` credits the
+original tool, `web-cli` says it ships both a web app and a command line.
 
-把一段人物视频（或摄像头画面）转成能在 [Spine](https://esotericsoftware.com/) 里直接打开的
-**骨骼动画工程**：`<工程名>.json` + `<工程名>.atlas` + `<工程名>.png`。
+It turns a clip of a person (or your webcam) into a **skeletal animation project** you can open
+directly in [Spine](https://esotericsoftware.com/): `<project>.json` + `<project>.atlas` + `<project>.png`.
 
-**启发自 [SpineVExt](https://jcupdev.itch.io/spinevext)** —— jcupdev 做的 Unity 桌面工具
-（video → spine，用 Unity + Barracuda 跑 ResNet50 PoseNet）。见下面的
-[「启发来源」](#启发来源spinevext原版)。
+**Inspired by [SpineVExt](https://jcupdev.itch.io/spinevext)** — the Unity desktop tool by jcupdev
+(video → spine, running ResNet50 PoseNet on Unity + Barracuda). See
+[“Where this comes from”](#where-this-comes-from-spinevext) below.
 
-本仓库不是它的移植或分支，而是**独立重写**：把整条管线搬到浏览器与命令行，
-**所有算法核心（解码、平滑、骨骼映射、动画烘焙、Spine 导出、图集装箱）都用 Rust 写，
-一份代码绑定三次**。
+This is **not a port or a fork**: it is an independent rewrite that moves the whole pipeline to the
+browser and the command line, with **every algorithmic core (decode, smooth, rig mapping, animation
+baking, Spine export, atlas packing) written in Rust and bound three ways from one codebase**.
 
-> 算法与公式、与原版的逐项对照、以及踩过的坑，见 [`docs/原理.md`](docs/原理.md)。
+> Formulas, a point-by-point comparison with the original, and the pitfalls we hit live in
+> [`docs/原理.md`](docs/原理.md) (Chinese).
 
-## 启发来源：SpineVExt（原版）
+## Where this comes from: SpineVExt
 
-**灵感与功能目标都来自 [SpineVExt](https://jcupdev.itch.io/spinevext)**（作者 jcupdev）：
+**The idea and the feature set come from [SpineVExt](https://jcupdev.itch.io/spinevext)** by jcupdev:
 
-- 工具页：[jcupdev.itch.io/spinevext](https://jcupdev.itch.io/spinevext)
-- 1.2 版发布说明：[Version 1.2 Release](https://jcupdev.itch.io/spinevext/devlog/667627/version-12-release)
-  （1.1：[Version 1.1 Release](https://jcupdev.itch.io/spinevext/devlog/664575/version-11-release)）
+- Tool page: [jcupdev.itch.io/spinevext](https://jcupdev.itch.io/spinevext)
+- v1.2 release notes: [Version 1.2 Release](https://jcupdev.itch.io/spinevext/devlog/667627/version-12-release)
+  (v1.1: [Version 1.1 Release](https://jcupdev.itch.io/spinevext/devlog/664575/version-11-release))
 
-原版是一个 Unity 桌面工具：输入人物视频 / 摄像头画面，用 Barracuda 跑 ResNet50 PoseNet 估计
-姿态，再把关键点转成 Spine 骨骼动画，界面上有 Inspector 参数（confidence / nmsRadius /
-maxPoses / GetBaseFrame / PropogateList 等）——本仓库的界面与配置项刻意保留了这些概念，
-方便对照（逐项对照写在 [`docs/原理.md`](docs/原理.md) 第 11 节）。
+The original is a Unity desktop tool: feed it a video or webcam, it runs ResNet50 PoseNet through
+Barracuda, turns the keypoints into a Spine skeletal animation, and exposes Inspector knobs
+(confidence / nmsRadius / maxPoses / GetBaseFrame / PropogateList). This repo deliberately keeps those
+concepts in its UI and config so you can compare side by side (item-by-item notes in section 11 of
+[`docs/原理.md`](docs/原理.md)).
 
-与原版的关系：
+How this repo relates to it:
 
-- **独立重写，不含原版代码**：算法核心是 Rust（约 5 千行），跑在浏览器（wasm-bindgen +
-  onnxruntime-web）和命令行（napi-rs / 纯 Rust CLI + tract-onnx）两条路上；
-- **多出来的部分**：实时双屏预览（左屏画面+骨架、右屏 Spine 角色跟着动）、角色工程导出
-  （把视频动作重定向到自己的角色骨骼）、白天/黑夜主题、中文/English/日本語 三语界面；
-- 内置演示角色 **Spineboy** 来自 Spine 官方示例，遵循 Spine Runtimes License；
-  原版工具与其素材的版权归 jcupdev 所有。
+- **an independent rewrite with none of the original code**: ~5k lines of Rust for the algorithm core,
+  running in the browser (wasm-bindgen + onnxruntime-web) and on the command line (napi-rs / pure-Rust
+  CLI + tract-onnx);
+- **what is added**: a live dual view (picture + bones on the left, a Spine character following on the
+  right), character-project export (retargeting the video motion onto your own rig), light/dark themes
+  and a 中文 / English / 日本語 UI;
+- the built-in **Spineboy** demo character comes from Spine’s official examples and follows the Spine
+  Runtimes License; the original tool and its assets remain jcupdev’s.
 
-## 演示视频
+## Demo video
 
-[`docs/demo/spinevext-demo.mp4`](docs/demo/spinevext-demo.mp4)（2.7 MB / 1600×980 / 48 秒，中文字幕烧进画面）
+[`docs/demo/spinevext-demo.mp4`](docs/demo/spinevext-demo.mp4) (2.7 MB / 1600×980 / 48 s, Chinese subtitles burned in)
 
-内容：载入视频 → 开始检测（14 根骨骼 / 基准帧 #32）→ 左屏实时画面+骨架、右屏 Spine 角色同步跟随
-→ 换角色 → 上传自己的 Spine 工程（骨骼名自动识别）→ 导出角色工程 → 白天/黑夜主题
-→ 视频帧图集模式对比，末尾接纯 Rust CLI 的终端实录。
-字幕文件在 [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt)（`.ass` 是烧字幕用的样式版）。
+What it shows: load a video → start detection (14 bones, base frame #32) → live picture + bones on the
+left, a Spine character following on the right → switch characters → upload your own Spine project
+(bone names are recognised automatically) → export a character project → light/dark theme → compare
+with the video-frame atlas mode, ending on a real terminal run of the pure-Rust CLI.
+Subtitles: [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt) (`.ass` is the styled version used for burning).
 
-### 用法速览（英文界面 · 中英双语字幕）
+### Quick guide (English UI, bilingual subtitles)
 
-![SpineVExt 用法速览](docs/demo/spinevext-guide-en.webp)
+![SpineVExt quick guide](docs/demo/spinevext-guide-en.webp)
 
 [`docs/demo/spinevext-guide-en.webp`](docs/demo/spinevext-guide-en.webp)
-（1000×610 / 28.6 秒 / **0.6 MB**，动图 WebP，GitHub 与各浏览器都能直接播放）：英文界面走一遍
-载入视频 → 开始检测 → 实时跟随 → 选导出模式 → 导出的完整流程。
-同样的内容另存了一份 GIF —— [`spinevext-guide-en.gif`](docs/demo/spinevext-guide-en.gif)（2.3 MB，
-给不支持动图 WebP 的地方用）；字幕样式源文件是同一目录的 `.ass`。
+(1000×610 / 28.6 s / **0.6 MB**, animated WebP — renders right here on GitHub and in every browser)
+walks through the English UI: pick a video → start detection → live follow → choose the export mode →
+export. A GIF version of the same clip is
+[`spinevext-guide-en.gif`](docs/demo/spinevext-guide-en.gif) (2.3 MB, for anything that does not
+animate WebP). Chinese + English subtitles; the styled source is the `.ass` next to it.
 
-## 三种运行形态
+## Three ways to run it
 
-| 形态        | 入口                         | 绑定方式       | 推理运行时            |
-| ----------- | ---------------------------- | -------------- | --------------------- |
-| 浏览器应用  | `vp dev` / `vp build`        | wasm-bindgen   | onnxruntime-web       |
-| Node CLI    | `pnpm exec cli`              | napi-rs        | onnxruntime-node      |
-| 纯 Rust CLI | `cargo run -p spinevext-cli` | 直接依赖 crate | tract-onnx（纯 Rust） |
+| Form          | Entry point                  | Binding              | Inference runtime      |
+| ------------- | ---------------------------- | -------------------- | ---------------------- |
+| Web app       | `vp dev` / `vp build`        | wasm-bindgen         | onnxruntime-web        |
+| Node CLI      | `pnpm exec cli`              | napi-rs              | onnxruntime-node       |
+| Pure Rust CLI | `cargo run -p spinevext-cli` | depends on the crate | tract-onnx (pure Rust) |
 
-三者共用 `crates/spinevext-core`，没有重复实现。
+All three share `crates/spinevext-core` — nothing is implemented twice.
 
-## 快速开始
+## Quick start
 
-需要 Node 20+、pnpm、Rust 工具链（含 `wasm32-unknown-unknown` 目标）。
+You need Node 20+, pnpm, and a Rust toolchain with the `wasm32-unknown-unknown` target.
 
 ```bash
 pnpm install
-pnpm exec vp run setup     # 下载模型 + 建 WASM + 建 napi 原生绑定
-pnpm exec vp dev           # 打开 http://localhost:5183
+pnpm exec vp run setup     # fetch the model + build WASM + build the napi native binding
+pnpm exec vp dev           # open http://localhost:5183
 ```
 
-界面里：左侧选视频 / 摄像头 → 「开始检测」→ 中间逐帧检查骨架 → 右侧导出 zip。
+In the UI: pick a video / webcam on the left → “Start detection” → scrub frames in the middle →
+export a zip on the right.
 
-### 命令
+### Commands
 
-本项目已迁移到 **Vite+**（统一工具链 `vp`）：
+The project is on **Vite+** (the unified `vp` toolchain):
 
-| 命令                             | 作用                                            |
-| -------------------------------- | ----------------------------------------------- |
-| `vp dev`                         | 开发服务器（默认 5183，已放开 host / CORS）     |
-| `vp build`                       | 生产构建到 `dist/`                              |
-| `pnpm run serve`                 | 用带正确 MIME 与宽松 CORS 的静态服务器托管 dist |
-| `vp test run`                    | Vitest（52 个用例，含 1 个真跑视频的集成用例）  |
-| `vp check`                       | 格式化 + 类型感知 lint + 类型检查（0 error）    |
-| `vp run rust:test`               | Rust 工作区测试（32 个用例）                    |
-| `vp run wasm`                    | 编译 WASM 内核                                  |
-| `vp run native`                  | 编译 napi 原生绑定                              |
-| `vp run setup` / `vp run verify` | 一次性准备 / 交付前全量校验                     |
+| Command                          | What it does                                              |
+| -------------------------------- | --------------------------------------------------------- |
+| `vp dev`                         | dev server (port 5183, permissive host / CORS)            |
+| `vp build`                       | production build into `dist/`                             |
+| `pnpm run serve`                 | serve `dist/` with correct MIME types and open CORS       |
+| `vp test run`                    | Vitest (52 cases, including one that really runs a video) |
+| `vp check`                       | format + type-aware lint + type check (0 errors)          |
+| `vp run rust:test`               | Rust workspace tests (32 cases)                           |
+| `vp run wasm`                    | build the WASM core                                       |
+| `vp run native`                  | build the napi native binding                             |
+| `vp run setup` / `vp run verify` | one-shot setup / full pre-delivery check                  |
 
-`vp` 是 Vite+ 的 CLI（项目内安装在 `vite-plus` 里，用 `pnpm exec vp` 调用）。
-任务定义在 `vite.config.ts` 的 `run.tasks` 里，带依赖与缓存。
+`vp` is the Vite+ CLI (installed as the `vite-plus` dependency, run through `pnpm exec vp`).
+Tasks live in `run.tasks` inside `vite.config.ts`, with dependencies and caching.
 
-## 命令行用法
+## Command line
 
-### 纯 Rust CLI（不需要 Node）
+### Pure Rust CLI (no Node needed)
 
 ```bash
 cargo run -p spinevext-cli --release -- input.mp4 --out ./out \
   --fps 15 --max-width 960 --confidence 0.3 --smooth 5
 ```
 
-只依赖系统的 `ffmpeg` / `ffprobe`（取帧）与 Rust 本身；推理用纯 Rust 的 `tract-onnx`。
-输出 `out/<工程名>.json` / `.atlas` / `.png` / `.zip`。
+It only needs the system `ffmpeg` / `ffprobe` (frame extraction) and Rust itself; inference runs on
+pure-Rust `tract-onnx`. It writes `out/<project>.json` / `.atlas` / `.png` / `.zip`.
 
-实测（MacBook，单线程 CPU）：2 秒 30 帧的视频 **1.0 秒**跑完，**内存峰值 212MB**。
+Measured on a MacBook, single-threaded CPU: a 2-second, 30-frame clip finishes in **1.0 s** with a
+**212 MB peak RSS**.
 
-默认策略：模型被剪过图（只剩卷积主干）就打开 tract 的算子融合——同一个优化器
-在**原始** MoveNet 图上会吃掉 20GB+ 内存且跑不完，在图剪干净之后只要 0.05s，
-推理快约 5 倍，结果逐帧完全一致（_见 `docs/原理.md` 第 10 节_）。
-需要时用 `--no-optimize` / `--optimize` 覆盖。
+Default policy: when the model has been pruned (only the convolutional backbone is left) tract’s
+operator fusion is enabled — the same optimizer eats 20 GB+ and never finishes on the **original**
+MoveNet graph, but takes 0.05 s once the graph is pruned, is ~5× faster, and produces bit-identical
+frames (see section 10 of `docs/原理.md`). Override with `--no-optimize` / `--optimize`.
 
 ### Node CLI
 
@@ -126,147 +134,163 @@ pnpm install
 pnpm exec cli input.mp4 --out ./out --fps 15
 ```
 
-用 `onnxruntime-node` 跑完整 MoveNet 模型，其余同样交给 Rust 内核。
+Runs the full MoveNet model on `onnxruntime-node`; everything else goes through the same Rust core.
 
-## 工作流
+## Pipeline
 
-1. 取帧：`<video>` / ffmpeg → RGBA；
-2. 预处理（Rust）：按模型家族走 letterbox(NHWC) 或 cover 裁剪(NCHW)；
-3. 推理：MoveNet / PoseNet 家族 ONNX，自动识别输出布局；
-4. 解码（Rust）：heatmap argmax + offsets + 置信度 + 多人 NMS；
-5. 平滑（Rust）：置信度加权 + 圆周角度平均；
-6. 骨骼（Rust）：17 关键点 → 14 根骨骼的局部旋转角；
-7. 烘焙（Rust）：基准帧选取、缺失骨骼传播；
-8. 导出（Rust）：Spine 4.3 JSON（格式版本锁定 `4.3.23`）+ `.atlas` + 图集 PNG（+ zip）；
-9. **实时双屏**：左屏是视频/摄像头 + 骨架（真·实时刷新），右屏是 Spine 演示角色跟着人动；
-10. 预览：官方 `@esotericsoftware/spine-webgl` 运行时在页面里实时播放导出的工程（可暂停、变速、缩放）。
+1. Frames: `<video>` / ffmpeg → RGBA;
+2. Preprocess (Rust): letterbox (NHWC) or cover-crop (NCHW) depending on the model family;
+3. Inference: MoveNet / PoseNet family ONNX, output layout detected automatically;
+4. Decode (Rust): heatmap argmax + offsets + confidence + multi-person NMS;
+5. Smooth (Rust): confidence weighting + circular angle averaging;
+6. Rig (Rust): 17 keypoints → local rotations of 14 bones;
+7. Bake (Rust): base-frame selection, propagation of missing bones;
+8. Export (Rust): Spine 4.3 JSON (format version pinned to `4.3.23`) + `.atlas` + atlas PNG (+ zip);
+9. **Live dual view**: video/webcam + bones on the left (真·real-time refresh), a Spine character following on the right;
+10. Preview: the official `@esotericsoftware/spine-webgl` runtime plays the exported project right in the page (pause, speed, zoom).
 
-导出有两条路（见上面的「导出：角色工程 / 视频帧图集」）：把检测结果烘焙到角色骨骼上，
-或者把视频帧本身打包成图集。
+There are two export paths (see “Export: character project / video frame atlas” below): bake the
+detection onto the character’s bones, or pack the video frames themselves into an atlas.
 
-界面支持**白天 / 黑夜主题**（标题栏右上角切换，选择写进 localStorage）。
+The UI supports a **light / dark theme** (top-right toggle, stored in localStorage).
 
-### 界面语言（i18n）
+### UI languages (i18n)
 
-标题栏右侧可以切 **中文 / English / 日本語**，选择写进 localStorage。
-**默认是 English**（仓库面向英文读者，刻意不跟随浏览器语言），切过之后会记住你的选择，
-同时会更新 `<html lang>`。
+The header switches between **中文 / English / 日本語**, stored in localStorage.
+**English is the default** (deliberately not sniffing the browser language); once you switch,
+your choice is remembered, and `<html lang>` is updated too.
 
-文案集中在一张表里：[`src/i18n/dictionary.ts`](src/i18n/dictionary.ts)，key 用点分层级、
-和来源文件一一对应。加一门语言只要在 `LANGUAGES` 里加一个代码、给每个 key 补一列；
-`tests/i18n.test.ts` 会检查**每种语言的 key 是否齐全、占位符 `{name}` 是否对齐**，
-还会扫组件文件，发现硬编码的中文（注释除外）就报错。
+All strings live in one table: [`src/i18n/dictionary.ts`](src/i18n/dictionary.ts) — dotted keys that
+map one-to-one to the source files. Adding a language means adding a code to `LANGUAGES` and one
+column per key; `tests/i18n.test.ts` checks that **every language has every key and the same `{name}`
+placeholders**, and scans the components for hard-coded CJK text (comments aside).
 
-状态栏的消息存的是 key + 参数而不是翻好的字符串，所以**切换语言时已显示的消息会立刻重译**。
+Status-bar messages store a key plus parameters instead of a translated string, so **switching
+language retranslates messages that are already on screen**.
 
-### 演示角色（姿态实时重定向）
+### Demo characters (live pose retargeting)
 
-舞台右侧内置 **4 个演示角色**（视频 / 摄像头都能实时驱动），另外可以上传你自己的工程：
+Four demo characters ship on the right of the stage — video and webcam drive all of them live — plus your own upload:
 
-| 角色                      | 来源                                           | 映射骨骼 |
-| ------------------------- | ---------------------------------------------- | -------- |
-| Spineboy                  | Spine 官方示例 `examples/spineboy`             | 8 根     |
-| 拼装人偶 Mix & Match      | Spine 官方示例 `examples/mix-and-match`        | 10 根    |
-| 空中马戏 Celestial Circus | Spine 官方示例 `examples/celestial-circus`     | 8 根     |
-| 哥布林 Goblins            | Spine 官方示例 `examples/goblins`              | 8 根     |
-| 你自己上传的工程          | 导出面板里的「选择 zip 或 json + atlas + png」 | 自动识别 |
+| Character        | Source                                                   | Bones mapped |
+| ---------------- | -------------------------------------------------------- | ------------ |
+| Spineboy         | official Spine sample `examples/spineboy`                | 8            |
+| Mix & Match      | official Spine sample `examples/mix-and-match`           | 10           |
+| Celestial Circus | official Spine sample `examples/celestial-circus`        | 8            |
+| Goblins          | official Spine sample `examples/goblins`                 | 8            |
+| Your own upload  | “Choose a zip or json + atlas + png” in the Export panel | guessed      |
 
-素材全部来自 Spine 官方示例（4.3 分支，`EsotericSoftware/spine-runtimes` 的
-`spine-libgdx-tests/assets`），每个角色目录里都带一份 `LICENSE.txt`——官方许可允许再分发，
-要求随附该文件，且不得商用。
+All assets come from Spine’s official examples (4.3 branch, `spine-libgdx-tests/assets` of
+`EsotericSoftware/spine-runtimes`). Each character folder ships its `LICENSE.txt`: the official
+licence allows redistribution as long as that file accompanies the images, and forbids commercial use.
 
-驱动方式是「加法式局部旋转」：`角色骨骼.rotation = 角色静止角 +（当前帧局部角 − 基准帧局部角）`，
-不需要标定骨骼长度或朝向；没检测到人时角色播自己的待机动画。
+Retargeting is “additive local rotation”: `characterBone.rotation = restAngle + (currentLocal − baseLocal)`,
+so no bone lengths or bind poses have to be calibrated; when nobody is detected the character plays
+its own idle animation.
 
-上传的工程会自动认骨骼名：`torso / head / arm-l / leg-r`、`front-upper-arm / rear-thigh`、
-`upperArm.L / upperLeg.R` 三种常见命名都能猜出映射（`guessRig`），猜不出任何一根时会明确报错。
-想加内置角色，把它放进 `public/demo/<名字>/`（JSON + atlas + PNG），再在
-`src/core/character.ts` 的 `DEMO_CHARACTERS` 里加一条即可。
+Uploaded projects have their bone names guessed automatically: `torso / head / arm-l / leg-r`,
+`front-upper-arm / rear-thigh` and `upperArm.L / upperLeg.R` all work (`guessRig`), and it fails
+loudly when nothing can be mapped. To add a built-in character, drop it into
+`public/demo/<name>/` (JSON + atlas + PNG) and add an entry to `DEMO_CHARACTERS` in
+`src/core/character.ts`.
 
-### 检测模型的能力边界（请先读这一段）
+### What the pose model can and cannot do (read this first)
 
-内置的姿态模型是**人体关键点**模型（MoveNet SinglePose，COCO-17 那 17 个点），
-所以下面这几类素材**支持得不好，调参也救不回来**：
+The bundled model is a **human keypoint** model (MoveNet SinglePose, the 17 COCO keypoints), so
+these kinds of artwork are **supported poorly — no amount of parameter tuning fixes it**:
 
-- **非人形 / Q 版角色**：三头身、大头小身、超比例手脚、多足 / 多翼 / 尾鳍 / 耳朵这类结构，
-  COCO-17 的定义里根本没有对应关键点，检测出来的关节会飘、会左右手互换，
-  重定向到角色骨骼上就更容易穿模；
-- **缺色 / 低对比 / 剪影**：平涂、单色、逆光剪影、半透明这些画面缺少纹理与边缘线索，
-  容易整帧漏检或逐帧抖动；
-- **遮挡**：手插兜、抱胸、被道具挡住时会丢关键点，表现为那一帧回填成基准帧姿态。
+- **Non-humanoid and chibi (super-deformed) characters**: three-heads-tall proportions, huge heads,
+  exaggerated limbs, extra legs / wings / tail fins / ears — COCO-17 simply has no keypoint for
+  those, so joints drift and left/right get swapped, and retargeting onto the character’s bones
+  clips badly;
+- **Flat, low-colour or silhouette artwork**: flat fills, single colours, backlit silhouettes and
+  transparency leave the model without texture or edge cues, so it either misses whole frames or
+  jitters frame to frame;
+- **Occlusion**: hands in pockets, arms crossed, props in front of the body lose keypoints; those
+  frames fall back to the base-frame pose.
 
-**结论：要覆盖这类素材，需要换成更合适的"关键点 pose 检测"模型**，而不是继续调参。可选：
+**Bottom line: for this kind of material you need a better keypoint pose model, not more tuning.**
+Options:
 
-| 方向                     | 具体模型                                                               | 收益                                                                                                    |
-| ------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| 保住 COCO-17、提升鲁棒性 | MoveNet MultiPose、YOLOv8-pose / YOLO11-pose、RTMPose、ViTPose、DWPose | 遮挡、低对比、画风迁移上明显更稳，接入成本最低（同样是 17 点，解码内核已经支持 heatmap 与回归两条路径） |
-| 真正支持非人形           | 自定义关键点定义（加尾巴 / 耳朵 / 翅膀…）+ 自己的 rig 映射             | 从"检测人体"变成"检测这个角色的结构"，需要训练或标注数据                                                |
+| Direction                      | Models                                                                         | What you gain                                                                                                                                                                             |
+| ------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Keep COCO-17, gain robustness  | MoveNet MultiPose, YOLOv8-pose / YOLO11-pose, RTMPose, ViTPose, DWPose         | Clearly steadier under occlusion, low contrast and art-style shift; cheapest to wire up (still 17 points, and the Rust decoder already handles both heatmap+offset and direct regression) |
+| Actually support non-humanoids | your own keypoint definition (tail / ears / wings …) plus your own rig mapping | You go from “detect a human” to “detect this character’s structure”; needs training or labelled data                                                                                      |
 
-换模型的接入点（只需要动这几处）：
+Where to swap the model (only these seams):
 
-- 模型规格与前处理 / 输出布局：`src/core/model-spec.ts`、`src/core/inference.ts`
-- Rust 解码内核：`crates/spinevext-core/src/decode.rs`（heatmap + offset 与直接回归两条路径都已具备）
-- 骨骼定义与映射：`crates/spinevext-core/src/rig.rs`（14 根骨骼）、
-  `src/core/character-project.ts` 的 `guessRig`（上传工程时按骨骼名猜映射）
+- model spec, preprocessing and output layout: `src/core/model-spec.ts`, `src/core/inference.ts`
+- Rust decoder: `crates/spinevext-core/src/decode.rs` (both heatmap+offset and regression paths exist)
+- skeleton definition and mapping: `crates/spinevext-core/src/rig.rs` (14 bones) and `guessRig` in
+  `src/core/character-project.ts` (guesses the mapping when you upload a project)
 
-> 之前内置过一只 Q 版非人形角色（翻车鱼）当演示，就是被这条限制挡住的例子：
-> 它需要自定义关键点才能做准，所以现在只保留人形的 Spineboy。
+> The chibi, non-humanoid demo character (a mola mola) that used to ship with the repo is exactly
+> this limitation in practice — it needs custom keypoints to look right, which is why only the
+> humanoid Spineboy remains built in.
 
-### 导出：角色工程 / 视频帧图集
+### Export: character project / video frame atlas
 
-右侧导出面板的「导出内容」决定产物是什么，两者都是 Spine 4.3 工程（JSON + atlas + PNG + zip）：
-两种产物声明的**格式版本都锁在 `4.3.23`**（Rust 里的 `spine::SPINE_VERSION` 是唯一事实来源，
-角色工程经 `engine.spineVersion` 读同一个值写入）。
+“Export as” in the right-hand panel decides what you get; both are Spine 4.3 projects
+(JSON + atlas + PNG + zip). Both declare the **same pinned format version `4.3.23`**
+(`spine::SPINE_VERSION` in Rust is the single source of truth; the character export reads the very
+same value through `engine.spineVersion`).
 
-| 模式       | 骨架与美术           | 动画数据                               | 适合                        |
-| ---------- | -------------------- | -------------------------------------- | --------------------------- |
-| 角色工程   | 角色自己的           | **刚才视频检测出的骨骼角度**（重定向） | 拿角色资产 + 真人动作做动画 |
-| 视频帧图集 | 视频画面（每帧一图） | 只切槽位附件，不含骨骼旋转             | 要保留原始画面的逐帧还原    |
+| Mode              | Skeleton & art                         | Animation data                                 | Good for                                  |
+| ----------------- | -------------------------------------- | ---------------------------------------------- | ----------------------------------------- |
+| Character project | the character’s own                    | **the bone angles just detected** (retargeted) | character art animated by a real person   |
+| Video frame atlas | the video picture, one image per frame | attachment swaps only, no bone rotation        | frame-by-frame preservation of the source |
 
-角色工程模式下，导出的 `<工程名>.json` 里写的是
-`animations.<动画名>.bones.<角色骨骼>.rotate`，数值等于
-`角色骨骼静止角 + clamp(该帧局部角 − 基准帧局部角, ±60°)`；图集和图片完全来自角色，
-不含任何视频帧。
+In character mode the exported `<project>.json` contains
+`animations.<animation>.bones.<characterBone>.rotate`, whose values are
+`character rest angle + clamp(that frame’s local angle − base frame local angle, ±60°)`; the atlas
+and images come entirely from the character, with no video frames mixed in.
 
-导出的工程是**直接能在 Spine 编辑器里打开**的，导出时会做三件归一化
-（`normalizeCharacterProject`，细节见 [`docs/原理.md`](docs/原理.md) 第 8.7 节）：
+The exported project **opens straight in the Spine editor** — the export normalises three things
+(`normalizeCharacterProject`, see section 8.7 of [`docs/原理.md`](docs/原理.md)):
 
-- 去掉 `skeleton.images`（编辑器会把它拼在页名前面，于是 `images: "./images/"` + 页名
-  `images/tail-fin.png` 会去找 `images/images/tail-fin.png`，整只角色都是 `MISSING`），
-  页图片平铺到工程根目录；
-- 非 ASCII 部位名换成英文名（用该 region 所在页的文件名：`脸→face`、`左臂→arm-l`、
-  `后发→hair-back`…），骨架 JSON 里的槽位名 / 附件名 / 动画引用一起改；
-- 每个页块前保证有一个空行——Spine 的 `TextureAtlas` 靠空行判断"这里是新的一页"，
-  源文件漏了或在 region 之间多写了都会解析错；
-- 已全英文的工程（官方 Spineboy）名字原样保留，只平铺页路径、规范空行。
+- it drops `skeleton.images` (the editor prepends that directory to the page name, so
+  `images: "./images/"` plus a page named `images/tail-fin.png` ends up looking for
+  `images/images/tail-fin.png` and the whole character shows up as `MISSING`) and flattens the page
+  images into the project root;
+- non-ASCII part names become English ones (using the file name of the page the region lives on:
+  `脸→face`, `左臂→arm-l`, `后发→hair-back`, …), and slot names / attachment names / animation
+  references are renamed together;
+- every page block is guaranteed a blank line in front — Spine’s `TextureAtlas` only starts a new
+  page after an empty line, so a source atlas that omits them (or sprinkles them between regions)
+  would otherwise be parsed wrongly;
+- already-English projects (the official Spineboy) keep their names and only get flattened paths.
 
-回归测试直接用官方运行时加载导出的工程（`Region not found in atlas` 会当场抛错），
-跑的是真实素材，见 `tests/character-project.test.ts`。修旧产物可以跑
-`node_modules/.bin/jiti scripts/normalize-export.ts <旧导出目录> <新导出目录>`。
+A regression test loads the exported project with the **official runtime** (a missing region throws
+`Region not found in atlas` on the spot) using the real assets — see `tests/character-project.test.ts`.
+Old exports can be repaired with
+`node_modules/.bin/jiti scripts/normalize-export.ts <old dir> <new dir>`.
 
-做过的端到端验证见 `tests/character-export.integration.test.ts`：
-用纯 Rust CLI 真跑一遍 `.test-assets/person-rot.mp4`，再把真实检测出的骨骼烘焙到
-Spineboy 上，解 zip 断言产物里只有角色自己的 JSON / atlas / PNG。
+The end-to-end check lives in `tests/character-export.integration.test.ts`: it really runs
+`.test-assets/person-rot.mp4` through the pure-Rust CLI, bakes the detected bones onto Spineboy, and
+asserts that the zip contains nothing but the character’s own JSON / atlas / PNG.
 
-## 目录
+## Layout
 
 ```
-crates/spinevext-core/   算法内核（无 wasm / node 依赖，可单独测试）
-crates/spinevext-node/   napi-rs 绑定（Node 用）
-crates/spinevext-cli/    纯 Rust CLI（tract-onnx 推理 + ffmpeg 取帧）
-src/core/                TS 侧编排：引擎封装、推理、取帧、流水线、导出
-src/components/          界面（shadcn/ui + Tailwind v4）
-src/wasm/pkg/            wasm-pack 产物（构建生成，已忽略）
-native/                  napi 产物（构建生成，保留生成的 index.d.ts）
-public/models/           姿态模型
-docs/原理.md              算法原理与实现说明
+crates/spinevext-core/   algorithm core (no wasm / node deps, unit-testable on its own)
+crates/spinevext-node/   napi-rs binding (for Node)
+crates/spinevext-cli/    pure Rust CLI (tract-onnx inference + ffmpeg frame extraction)
+src/core/                TypeScript orchestration: engine wrapper, inference, frames, pipeline, export
+src/i18n/                UI strings (zh-CN / en / ja) and the tiny i18n store
+src/components/          UI (shadcn/ui + Tailwind v4)
+src/wasm/pkg/            wasm-pack output (generated, git-ignored)
+native/                  napi output (generated; the produced index.d.ts is kept)
+public/models/           pose model
+docs/原理.md              algorithm notes (Chinese)
 ```
 
-## 已知限制
+## Known limitations
 
-- 姿态模型只认人体结构：非人形 / Q 版 / 缺色剪影的素材效果差，换成更合适的
-  关键点模型才能解，详见上面的[「检测模型的能力边界」](#检测模型的能力边界请先读这一段)。
-- MoveNet 是单人模型：多人场景只会输出置信度最高的一人；需要多人时换成
-  PoseNet（heatmap + offset）家族的 ONNX，内核已支持多人与 NMS。
-- 浏览器里 ONNX Runtime 用单线程 WASM（避免 COOP/COEP 要求），长视频建议降低采样帧率。
-- 导出的图集是未压缩 RGBA；帧多、分辨率高时请调小「图集缩放」。
+- The pose model only understands human structure: non-humanoid, chibi and flat/low-colour artwork
+  detect badly — see “What the pose model can and cannot do” above for what to swap in.
+- MoveNet is single-person: in a crowd only the most confident person comes out. Swap in a PoseNet
+  (heatmap + offset) ONNX for multi-person — the core already supports multi-person decoding and NMS.
+- ONNX Runtime runs as single-threaded WASM in the browser (to avoid COOP/COEP requirements); lower
+  the sample fps for long clips.
+- The exported atlas is uncompressed RGBA; for many frames or high resolutions, reduce “Atlas scale”.
+- Diagnostic errors thrown by the Rust core stay in Chinese; only UI strings are translated.
