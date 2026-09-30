@@ -153,9 +153,9 @@ The UI supports a **light / dark theme** (top-right toggle, stored in localStora
 
 ### UI languages (i18n)
 
-The header switches between **中文 / English / 日本語**, stored in localStorage; without a stored
-choice it follows the browser language (`zh*` → Chinese, `ja*` → Japanese, otherwise English) and
-updates `<html lang>`.
+The header switches between **中文 / English / 日本語**, stored in localStorage.
+**English is the default** (deliberately not sniffing the browser language); once you switch,
+your choice is remembered, and `<html lang>` is updated too.
 
 All strings live in one table: [`src/i18n/dictionary.ts`](src/i18n/dictionary.ts) — dotted keys that
 map one-to-one to the source files. Adding a language means adding a code to `LANGUAGES` and one
@@ -183,6 +183,40 @@ Uploaded projects have their bone names guessed automatically: `torso / head / a
 loudly when nothing can be mapped. To add a built-in character, drop it into
 `public/demo/<name>/` (JSON + atlas + PNG) and add an entry to `DEMO_CHARACTERS` in
 `src/core/character.ts`.
+
+### What the pose model can and cannot do (read this first)
+
+The bundled model is a **human keypoint** model (MoveNet SinglePose, the 17 COCO keypoints), so
+these kinds of artwork are **supported poorly — no amount of parameter tuning fixes it**:
+
+- **Non-humanoid and chibi (super-deformed) characters**: three-heads-tall proportions, huge heads,
+  exaggerated limbs, extra legs / wings / tail fins / ears — COCO-17 simply has no keypoint for
+  those, so joints drift and left/right get swapped, and retargeting onto the character’s bones
+  clips badly;
+- **Flat, low-colour or silhouette artwork**: flat fills, single colours, backlit silhouettes and
+  transparency leave the model without texture or edge cues, so it either misses whole frames or
+  jitters frame to frame;
+- **Occlusion**: hands in pockets, arms crossed, props in front of the body lose keypoints; those
+  frames fall back to the base-frame pose.
+
+**Bottom line: for this kind of material you need a better keypoint pose model, not more tuning.**
+Options:
+
+| Direction                      | Models                                                                         | What you gain                                                                                                                                                                             |
+| ------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Keep COCO-17, gain robustness  | MoveNet MultiPose, YOLOv8-pose / YOLO11-pose, RTMPose, ViTPose, DWPose         | Clearly steadier under occlusion, low contrast and art-style shift; cheapest to wire up (still 17 points, and the Rust decoder already handles both heatmap+offset and direct regression) |
+| Actually support non-humanoids | your own keypoint definition (tail / ears / wings …) plus your own rig mapping | You go from “detect a human” to “detect this character’s structure”; needs training or labelled data                                                                                      |
+
+Where to swap the model (only these seams):
+
+- model spec, preprocessing and output layout: `src/core/model-spec.ts`, `src/core/inference.ts`
+- Rust decoder: `crates/spinevext-core/src/decode.rs` (both heatmap+offset and regression paths exist)
+- skeleton definition and mapping: `crates/spinevext-core/src/rig.rs` (14 bones) and `guessRig` in
+  `src/core/character-project.ts` (guesses the mapping when you upload a project)
+
+> The chibi, non-humanoid demo character (a mola mola) that used to ship with the repo is exactly
+> this limitation in practice — it needs custom keypoints to look right, which is why only the
+> humanoid Spineboy remains built in.
 
 ### Export: character project / video frame atlas
 
@@ -242,6 +276,8 @@ docs/原理.md              algorithm notes (Chinese)
 
 ## Known limitations
 
+- The pose model only understands human structure: non-humanoid, chibi and flat/low-colour artwork
+  detect badly — see “What the pose model can and cannot do” above for what to swap in.
 - MoveNet is single-person: in a crowd only the most confident person comes out. Swap in a PoseNet
   (heatmap + offset) ONNX for multi-person — the core already supports multi-person decoding and NMS.
 - ONNX Runtime runs as single-threaded WASM in the browser (to avoid COOP/COEP requirements); lower

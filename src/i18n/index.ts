@@ -5,7 +5,8 @@
  * * 非组件代码（`useSpinevext` 的状态消息）直接 `import { t }`，
  *   它读的是同一个模块级当前语言。
  *
- * 默认语言：本地存过就用存的，否则跟浏览器（zh* → 简体中文、ja* → 日本語、其余 → English）。
+ * 默认语言是 **English**（仓库面向英文读者）；用户在标题栏选过就记在 localStorage，
+ * 下次进来还用他选的那门。中文 / 日本語 都在标题栏一键可达。
  */
 
 import { useSyncExternalStore } from "react";
@@ -16,6 +17,9 @@ export type { Language, MessageKey };
 export { LANGUAGE_LABELS, LANGUAGES } from "./dictionary";
 
 const STORAGE_KEY = "spinevext-language";
+
+/** 没存过用户选择时用的语言。仓库面向英文读者，所以是英文而不是跟随浏览器。 */
+export const DEFAULT_LANGUAGE: Language = "en";
 
 function isLanguage(value: unknown): value is Language {
   return typeof value === "string" && (LANGUAGES as readonly string[]).includes(value);
@@ -28,10 +32,8 @@ function detectLanguage(): Language {
   } catch {
     // 隐私模式下 localStorage 会抛错，忽略即可
   }
-  const preferred = globalThis.navigator?.language ?? "zh-CN";
-  if (/^ja/i.test(preferred)) return "ja";
-  if (/^zh/i.test(preferred)) return "zh-CN";
-  return "en";
+  // 不跟浏览器语言走：默认英文，其它语言由用户显式切换（切换后的选择会被记住）
+  return DEFAULT_LANGUAGE;
 }
 
 let current: Language = detectLanguage();

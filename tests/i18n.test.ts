@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vite-plus/test";
 
 import { DICTIONARY, LANGUAGES, LANGUAGE_LABELS } from "@/i18n/dictionary";
-import { getLanguage, setLanguage, t } from "@/i18n";
+import { DEFAULT_LANGUAGE, getLanguage, setLanguage, t } from "@/i18n";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
@@ -39,6 +39,10 @@ describe("文案表", () => {
       }
     }
     expect(broken).toEqual([]);
+  });
+
+  it("默认语言是 English（不跟随浏览器语言）", () => {
+    expect(DEFAULT_LANGUAGE).toBe("en");
   });
 
   it("语言选择器上的名字用各语言自己的写法", () => {
