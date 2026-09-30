@@ -161,12 +161,19 @@ pnpm exec cli input.mp4 --out ./out --fps 15
 
 ### 演示角色（姿态实时重定向）
 
-舞台右侧内置一个演示角色，视频和摄像头都会实时驱动它：
+舞台右侧内置 **4 个演示角色**（视频 / 摄像头都能实时驱动），另外可以上传你自己的工程：
 
-| 角色             | 来源                                           |
-| ---------------- | ---------------------------------------------- |
-| Spineboy         | Spine 官方示例 `examples/spineboy`（8 根骨骼） |
-| 你自己上传的工程 | 导出面板里的「选择 zip 或 json + atlas + png」 |
+| 角色                      | 来源                                           | 映射骨骼 |
+| ------------------------- | ---------------------------------------------- | -------- |
+| Spineboy                  | Spine 官方示例 `examples/spineboy`             | 8 根     |
+| 拼装人偶 Mix & Match      | Spine 官方示例 `examples/mix-and-match`        | 10 根    |
+| 空中马戏 Celestial Circus | Spine 官方示例 `examples/celestial-circus`     | 8 根     |
+| 哥布林 Goblins            | Spine 官方示例 `examples/goblins`              | 8 根     |
+| 你自己上传的工程          | 导出面板里的「选择 zip 或 json + atlas + png」 | 自动识别 |
+
+素材全部来自 Spine 官方示例（4.3 分支，`EsotericSoftware/spine-runtimes` 的
+`spine-libgdx-tests/assets`），每个角色目录里都带一份 `LICENSE.txt`——官方许可允许再分发，
+要求随附该文件，且不得商用。
 
 驱动方式是「加法式局部旋转」：`角色骨骼.rotation = 角色静止角 +（当前帧局部角 − 基准帧局部角）`，
 不需要标定骨骼长度或朝向；没检测到人时角色播自己的待机动画。

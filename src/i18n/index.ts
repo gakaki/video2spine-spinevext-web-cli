@@ -89,6 +89,9 @@ export function useI18n(): I18n {
 /** 内置演示角色的显示名：按 id 查文案，用户上传的角色用它们自己的工程名。 */
 const CHARACTER_NAME_KEYS: Record<string, MessageKey> = {
   spineboy: "character.name.spineboy",
+  mixandmatch: "character.name.mixandmatch",
+  circus: "character.name.circus",
+  goblins: "character.name.goblins",
 };
 
 export function characterLabel(id: string, fallback: string): string {

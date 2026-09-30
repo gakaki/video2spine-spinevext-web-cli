@@ -47,6 +47,14 @@ export interface DemoCharacter {
   maxDelta?: number;
   /** 默认播放的待机动画名；没有就不播。 */
   idleAnimation?: string;
+  /**
+   * 要组合使用的皮肤名（按顺序叠加）。
+   *
+   * 官方示例里有的角色把身体放在单独的 skin 里（`mix-and-match` 的 `skin-base`、
+   * `goblins` 的 `goblin`），默认皮肤几乎是空的——只挂 default 会画不出东西，
+   * 包围盒也会算成 Infinity。这里显式列出要叠的皮肤；上传的工程走下面的启发式。
+   */
+  skins?: string[];
 }
 
 /** 已加载好的角色资源：图集页是字节，内置与上传共用同一条渲染路径。 */
@@ -60,6 +68,7 @@ export interface CharacterAsset {
   maxDelta: number;
   scale?: number;
   idleAnimation?: string;
+  skins?: string[];
   /** 由用户上传（而不是内置演示角色）。 */
   custom?: boolean;
 }
@@ -67,15 +76,17 @@ export interface CharacterAsset {
 /**
  * 内置演示角色。
  *
- * 只留 `spineboy` —— Spine 官方示例角色（拿枪版，骨骼名 front-/rear-）。
- * 想换成自己的角色，把它放进 `public/demo/<名字>/`（JSON + atlas + PNG），
+ * 全部来自 **Spine 官方示例**（`EsotericSoftware/spine-runtimes` 的 4.3 分支），
+ * 每个角色目录里都带一份 `LICENSE.txt`——官方许可允许再分发，但要求随附该文件，
+ * 且不得商用。想换成自己的角色，把它放进 `public/demo/<名字>/`（JSON + atlas + PNG），
  * 在这里加一条；或者直接在导出面板上传工程（骨骼名会走 `guessRig` 自动认）。
  *
- * 注意：`spineboy-pro` 的手臂是小臂合并成一节的，没有 `*-lower-arm` 骨骼，
- * 所以这里只映射到它真正有的骨骼（多写的映射会在运行时被静默跳过，
- * 但会让界面上的"映射了几根"和实际对不上）。
- *
- * 素材来自 Spine 官方示例，遵循 Spine Runtimes License。
+ * 几个注意点：
+ * * 官方示例的骨骼命名五花八门（`front-/rear-`、`left-/right-`、`body-up + leg-up/leg-down`），
+ *   `guessRig` 只能猜出常见的那几种，所以内置角色的映射都是**逐个对着骨架写死**的；
+ * * 只映射角色真正有的骨骼：多写的映射会被运行时静默跳过，界面上的"映射了几根"就和实际对不上；
+ * * `idleAnimation` 是没人驱动时播的动画；`goblins` 只有一条 `walk`，就当待机用（会原地走，
+ *   看起来比僵着强）。
  */
 export const DEMO_CHARACTERS: DemoCharacter[] = [
   {
@@ -93,6 +104,68 @@ export const DEMO_CHARACTERS: DemoCharacter[] = [
       lowerLegL: "rear-shin",
       upperLegR: "front-thigh",
       lowerLegR: "front-shin",
+    },
+  },
+  {
+    // 模块化角色：一页图集 + 多套皮肤（配件/服装），手臂腿都有 front/back 两条
+    id: "mixandmatch",
+    name: "Mix & Match",
+    jsonUrl: "demo/mix-and-match/mix-and-match-pro.json",
+    atlasUrl: "demo/mix-and-match/mix-and-match-pma.atlas",
+    idleAnimation: "idle",
+    // 这是个模块化角色：基础皮肤只有身体零件，头发/衣服/眼睛都是独立皮肤。
+    // 官方预组合好的整套在 full-skins/ 下（boy / girl / girl-blue-cape / girl-spring-dress），
+    // 用其中一套才是一个完整角色。
+    skins: ["full-skins/boy"],
+    rig: {
+      torso: "body-up",
+      head: "head",
+      upperArmR: "arm-front-up",
+      lowerArmR: "arm-front-down",
+      upperArmL: "arm-back-up",
+      lowerArmL: "arm-back-down",
+      upperLegR: "leg-up",
+      lowerLegR: "leg-down",
+      upperLegL: "leg-up-back",
+      lowerLegL: "leg-down-back",
+    },
+  },
+  {
+    // 秋千上的杂技演员：身体是 body-up，头在 face 骨骼上，四条肢体只有一节
+    id: "circus",
+    name: "Celestial Circus",
+    jsonUrl: "demo/celestial-circus/celestial-circus-pro.json",
+    atlasUrl: "demo/celestial-circus/celestial-circus.atlas",
+    idleAnimation: "wind-idle",
+    rig: {
+      torso: "body-up",
+      head: "face",
+      upperArmR: "arm-front-up",
+      upperArmL: "arm-back-up",
+      upperLegR: "leg-front",
+      lowerLegR: "leg-front-down",
+      upperLegL: "leg-back",
+      lowerLegL: "leg-back-down",
+    },
+  },
+  {
+    // 哥布林：标准 left-/right- 命名，`guessRig` 也能猜对，这里照样写死避免歧义
+    id: "goblins",
+    name: "Goblins",
+    jsonUrl: "demo/goblins/goblins-pro.json",
+    atlasUrl: "demo/goblins/goblins-pma.atlas",
+    idleAnimation: "walk",
+    // 哥布林的身体在 goblin 皮肤里（另外还有 goblingirl 可选）
+    skins: ["default", "goblin"],
+    rig: {
+      torso: "torso",
+      head: "head",
+      upperArmL: "left-arm",
+      upperArmR: "right-arm",
+      upperLegL: "left-upper-leg",
+      lowerLegL: "left-lower-leg",
+      upperLegR: "right-upper-leg",
+      lowerLegR: "right-lower-leg",
     },
   },
 ];
@@ -164,7 +237,9 @@ export async function createCharacterStage(
     const image = asset
       ? await decodeBytes(findPage(asset, page.name))
       : await loadImage(assetUrl(normalizePagePath(demo!, page.name)));
-    const texture = new spine.GLTexture(context, image, false, false);
+    // `page.pma` 是运行时从 atlas 的 `pma: true` 读出来的：预乘 alpha 的图集
+    // （官方示例里有不少，文件名带 `-pma`）要按预乘方式上传，否则边缘会发暗。
+    const texture = new spine.GLTexture(context, image, page.pma, false);
     page.setTexture(texture);
     textures.set(page.name, texture);
   }
@@ -174,6 +249,9 @@ export async function createCharacterStage(
   const data = reader.readSkeletonData(JSON.parse(jsonText));
 
   const skeleton = new spine.Skeleton(data);
+  // 皮肤：显式配置优先；没配就看默认皮肤是不是"空壳"，是的话补一个不带 accessories 的皮肤
+  const skin = composeSkin(data, demo ? demo.skins : asset!.skins);
+  if (skin) skeleton.setSkin(skin);
   const stateData = new spine.AnimationStateData(data);
   const state = new spine.AnimationState(stateData);
   const renderer = new spine.SceneRenderer(canvas, context, false);
@@ -218,10 +296,18 @@ export async function createCharacterStage(
   skeleton.setupPose();
   skeleton.updateWorldTransform(spine.Physics.update);
   skeleton.getBounds(boundsOffset, boundsSize, []);
-  const contentWidth = Math.max(boundsSize.x, 1);
-  const contentHeight = Math.max(boundsSize.y, 1);
-  const contentCenterX = boundsOffset.x + boundsSize.x / 2;
-  const contentCenterY = boundsOffset.y + boundsSize.y / 2;
+  // 万一一条附件都没有（皮肤选错、素材损坏），包围盒会是 Infinity；
+  // 这时退回骨架自己声明的尺寸，至少还能看见个大概而不是黑屏。
+  const fitted =
+    Number.isFinite(boundsOffset.x) && Number.isFinite(boundsSize.x) && boundsSize.x > 0;
+  const contentWidth = Math.max(fitted ? boundsSize.x : data.width || 100, 1);
+  const contentHeight = Math.max(fitted ? boundsSize.y : data.height || 100, 1);
+  const contentCenterX = fitted
+    ? boundsOffset.x + boundsSize.x / 2
+    : (data.x || 0) + contentWidth / 2;
+  const contentCenterY = fitted
+    ? boundsOffset.y + boundsSize.y / 2
+    : (data.y || 0) + contentHeight / 2;
 
   const fitCamera = () => {
     renderer.resize(spine.ResizeMode.Expand);
@@ -315,6 +401,49 @@ export async function createCharacterStage(
       context.dispose();
     },
   };
+}
+
+/**
+ * 挑/组合皮肤。
+ *
+ * * 传了名字就按名字叠加（缺的忽略）；
+ * * 没传就看默认皮肤是不是空壳：Slots 里挂上的附件太少（少于槽位数的 1/4），
+ *   就从其它皮肤里找一个不是 `accessories/` 开头的补上——官方示例里
+ *   `mix-and-match`、`goblins` 都是这种"身体在单独皮肤里"的结构。
+ */
+export function composeSkin(data: spine.SkeletonData, preferred?: string[]): spine.Skin | null {
+  const names = preferred?.filter((name) => data.findSkin(name)) ?? [];
+  if (names.length > 0) {
+    const composed = new spine.Skin("spinevext-composed");
+    for (const name of names) composed.addSkin(data.findSkin(name)!);
+    return composed;
+  }
+
+  const base = data.defaultSkin ?? data.skins[0] ?? null;
+  if (!base) return null;
+  const attached = countAttachments(base);
+  const threshold = Math.max(2, Math.floor(data.slots.length / 4));
+  if (attached >= threshold) return null; // 默认皮肤够用，别动它
+
+  const filler = data.skins.find(
+    (skin) =>
+      skin.name !== base.name &&
+      !/^accessories\b/i.test(skin.name) &&
+      countAttachments(skin) > attached,
+  );
+  if (!filler) return null;
+  const composed = new spine.Skin("spinevext-composed");
+  composed.addSkin(base);
+  composed.addSkin(filler);
+  return composed;
+}
+
+function countAttachments(skin: spine.Skin): number {
+  let total = 0;
+  for (let index = 0; index < skin.getAttachments().length; index += 1) {
+    if (skin.getAttachments()[index]) total += 1;
+  }
+  return total;
 }
 
 /** 把我们的骨骼名映射到角色骨骼名。 */

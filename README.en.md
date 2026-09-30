@@ -170,12 +170,19 @@ language retranslates messages that are already on screen**.
 
 ### Demo characters (live pose retargeting)
 
-One demo character ships on the right of the stage; video and webcam both drive it live:
+Four demo characters ship on the right of the stage — video and webcam drive all of them live — plus your own upload:
 
-| Character       | Source                                                   |
-| --------------- | -------------------------------------------------------- |
-| Spineboy        | the official Spine sample `examples/spineboy` (8 bones)  |
-| Your own upload | “Choose a zip or json + atlas + png” in the Export panel |
+| Character        | Source                                                   | Bones mapped |
+| ---------------- | -------------------------------------------------------- | ------------ |
+| Spineboy         | official Spine sample `examples/spineboy`                | 8            |
+| Mix & Match      | official Spine sample `examples/mix-and-match`           | 10           |
+| Celestial Circus | official Spine sample `examples/celestial-circus`        | 8            |
+| Goblins          | official Spine sample `examples/goblins`                 | 8            |
+| Your own upload  | “Choose a zip or json + atlas + png” in the Export panel | guessed      |
+
+All assets come from Spine’s official examples (4.3 branch, `spine-libgdx-tests/assets` of
+`EsotericSoftware/spine-runtimes`). Each character folder ships its `LICENSE.txt`: the official
+licence allows redistribution as long as that file accompanies the images, and forbids commercial use.
 
 Retargeting is “additive local rotation”: `characterBone.rotation = restAngle + (currentLocal − baseLocal)`,
 so no bone lengths or bind poses have to be calibrated; when nobody is detected the character plays

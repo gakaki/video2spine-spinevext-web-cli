@@ -237,6 +237,17 @@ const DICTS = {
   },
   "character.picker": { "zh-CN": "演示角色", en: "Demo character", ja: "デモキャラ" },
   "character.name.spineboy": { "zh-CN": "Spineboy", en: "Spineboy", ja: "Spineboy" },
+  "character.name.mixandmatch": {
+    "zh-CN": "拼装人偶",
+    en: "Mix & Match",
+    ja: "ミックス＆マッチ",
+  },
+  "character.name.circus": {
+    "zh-CN": "空中马戏",
+    en: "Celestial Circus",
+    ja: "セレスティアル・サーカス",
+  },
+  "character.name.goblins": { "zh-CN": "哥布林", en: "Goblins", ja: "ゴブリン" },
   "character.picker.hint": {
     "zh-CN": "在右侧「导出」面板可以上传自己的 Spine 角色工程",
     en: "Upload your own Spine project in the Export panel on the right",
