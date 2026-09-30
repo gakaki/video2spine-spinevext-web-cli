@@ -2,7 +2,10 @@
 
 [中文](README.md) · **English** · [日本語](README.ja.md)
 
-Turns a clip of a person (or your webcam) into a **skeletal animation project** you can open
+Project name: **`video2spine-spinevext-web-cli`** — `video2spine` is what it does, `spinevext` credits the
+original tool, `web-cli` says it ships both a web app and a command line.
+
+It turns a clip of a person (or your webcam) into a **skeletal animation project** you can open
 directly in [Spine](https://esotericsoftware.com/): `<project>.json` + `<project>.atlas` + `<project>.png`.
 
 **Inspired by [SpineVExt](https://jcupdev.itch.io/spinevext)** — the Unity desktop tool by jcupdev

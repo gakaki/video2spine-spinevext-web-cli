@@ -2,6 +2,9 @@
 
 **中文** · [English](README.en.md) · [日本語](README.ja.md)
 
+项目名 **`video2spine-spinevext-web-cli`**（三段的含义：`video2spine` 是它干的事、
+`spinevext` 致敬原版工具、`web-cli` 是它同时提供网页与命令行两种形态）。
+
 把一段人物视频（或摄像头画面）转成能在 [Spine](https://esotericsoftware.com/) 里直接打开的
 **骨骼动画工程**：`<工程名>.json` + `<工程名>.atlas` + `<工程名>.png`。
 
