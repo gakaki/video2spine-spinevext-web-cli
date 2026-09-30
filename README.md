@@ -46,13 +46,15 @@ maxPoses / GetBaseFrame / PropogateList 等）——本仓库的界面与配置�
 → 视频帧图集模式对比，末尾接纯 Rust CLI 的终端实录。
 字幕文件在 [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt)（`.ass` 是烧字幕用的样式版）。
 
-### 用法速览（英文界面 · 中英双语字幕 GIF）
+### 用法速览（英文界面 · 中英双语字幕）
 
-![SpineVExt 用法速览](docs/demo/spinevext-guide-en.gif)
+![SpineVExt 用法速览](docs/demo/spinevext-guide-en.webp)
 
-`docs/demo/spinevext-guide-en.gif`（1000×610 / 28 秒 / 2.3 MB）：英文界面走一遍
-载入视频 → 开始检测 → 实时跟随 → 选导出模式 → 导出的完整流程；
-字幕样式源文件在同一目录的 `.ass`。
+[`docs/demo/spinevext-guide-en.webp`](docs/demo/spinevext-guide-en.webp)
+（1000×610 / 28.6 秒 / **0.6 MB**，动图 WebP，GitHub 与各浏览器都能直接播放）：英文界面走一遍
+载入视频 → 开始检测 → 实时跟随 → 选导出模式 → 导出的完整流程。
+同样的内容另存了一份 GIF —— [`spinevext-guide-en.gif`](docs/demo/spinevext-guide-en.gif)（2.3 MB，
+给不支持动图 WebP 的地方用）；字幕样式源文件是同一目录的 `.ass`。
 
 ## 三种运行形态
 

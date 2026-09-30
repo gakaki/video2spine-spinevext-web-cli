@@ -51,11 +51,13 @@ Inspector には confidence / nmsRadius / maxPoses / GetBaseFrame / PropogateLis
 
 ### 使い方の早見（英語 UI・中英二言語字幕）
 
-![SpineVExt 使い方](docs/demo/spinevext-guide-en.gif)
+![SpineVExt 使い方](docs/demo/spinevext-guide-en.webp)
 
-`docs/demo/spinevext-guide-en.gif`（1000×610 / 28 秒 / 2.3 MB）：英語 UI で
-動画を選ぶ → 検出開始 → リアルタイム追従 → 書き出しモードの選択 → 書き出し、までを一通り。
-字幕は中国語＋英語、スタイル付きの元ファイルは同じディレクトリの `.ass` です。
+[`docs/demo/spinevext-guide-en.webp`](docs/demo/spinevext-guide-en.webp)
+（1000×610 / 28.6 秒 / **0.6 MB**・アニメーション WebP。GitHub でも各ブラウザでもそのまま再生できます）：
+英語 UI で 動画を選ぶ → 検出開始 → リアルタイム追従 → 書き出しモードの選択 → 書き出し までを一通り。
+同じ内容の GIF 版は [`spinevext-guide-en.gif`](docs/demo/spinevext-guide-en.gif)（2.3 MB、アニメーション
+WebP に対応しない環境向け）。字幕は中国語＋英語、スタイル付きの元ファイルは同じディレクトリの `.ass` です。
 
 ## 3 つの実行形態
 

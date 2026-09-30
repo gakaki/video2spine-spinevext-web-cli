@@ -53,11 +53,14 @@ Subtitles: [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt) (`.ass
 
 ### Quick guide (English UI, bilingual subtitles)
 
-![SpineVExt quick guide](docs/demo/spinevext-guide-en.gif)
+![SpineVExt quick guide](docs/demo/spinevext-guide-en.webp)
 
-`docs/demo/spinevext-guide-en.gif` (1000×610 / 28 s / 2.3 MB) walks through the English UI:
-pick a video → start detection → live follow → choose the export mode → export. Chinese + English
-subtitles; the styled source is the `.ass` next to it.
+[`docs/demo/spinevext-guide-en.webp`](docs/demo/spinevext-guide-en.webp)
+(1000×610 / 28.6 s / **0.6 MB**, animated WebP — renders right here on GitHub and in every browser)
+walks through the English UI: pick a video → start detection → live follow → choose the export mode →
+export. A GIF version of the same clip is
+[`spinevext-guide-en.gif`](docs/demo/spinevext-guide-en.gif) (2.3 MB, for anything that does not
+animate WebP). Chinese + English subtitles; the styled source is the `.ass` next to it.
 
 ## Three ways to run it
 
