@@ -1,0 +1,22 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1000
+PlayResY: 610
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Hiragino Sans GB,30,&H00FFFFFF,&H000000FF,&H99000000,&H70000000,0,0,0,0,100,100,0,0,3,1.4,0,2,36,36,32,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:03.00,Default,,0,0,0,,SPINEVEXT — turn a video into a Spine rig\N把视频变成 Spine 骨骼动画
+Dialogue: 0,0:00:03.00,0:00:06.00,Default,,0,0,0,,Pick a clip with a person (or open the webcam)\N选一段有人物的视频（或开摄像头）
+Dialogue: 0,0:00:06.00,0:00:08.50,Default,,0,0,0,,Click “Start detection” — pose runs in Rust/WASM\N点「Start detection」：姿态估计跑在 Rust/WASM
+Dialogue: 0,0:00:08.50,0:00:12.00,Default,,0,0,0,,Done: 14 bones per frame, base frame #32\N完成：每帧 14 根骨骼，基准帧 #32
+Dialogue: 0,0:00:12.00,0:00:16.08,Default,,0,0,0,,Left: live picture + bones   Right: Spine character follows\N左屏画面＋骨架，右屏 Spine 角色实时跟随
+Dialogue: 0,0:00:16.08,0:00:19.58,Default,,0,0,0,,Export as “Character project”: your art + the detected motion\N导出选「角色工程」：角色美术 + 视频里的动作
+Dialogue: 0,0:00:19.58,0:00:22.58,Default,,0,0,0,,Or “Video frame atlas”: every frame becomes a region\N或「视频帧图集」：每帧画面做成一个 region
+Dialogue: 0,0:00:22.58,0:00:25.08,Default,,0,0,0,,Name the project & animation, then hit Export\N填工程名 / 动画名，然后点导出
+Dialogue: 0,0:00:25.08,0:00:28.58,Default,,0,0,0,,You get a zip that opens straight in Spine 4.3\N得到一个能在 Spine 4.3 里直接打开的 zip

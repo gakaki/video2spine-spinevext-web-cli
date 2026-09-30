@@ -22,6 +22,14 @@ Unity 製デスクトップツール **SpineVExt**（video → spine、作者 jc
 → ライト／ダークテーマ → フレームアトラスとの比較、最後に純 Rust CLI のターミナル実録。
 字幕は [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt)（`.ass` は焼き込み用のスタイル版）。
 
+### 使い方の早見（英語 UI・中英二言語字幕）
+
+![SpineVExt 使い方](docs/demo/spinevext-guide-en.gif)
+
+`docs/demo/spinevext-guide-en.gif`（1000×610 / 28 秒 / 2.3 MB）：英語 UI で
+動画を選ぶ → 検出開始 → リアルタイム追従 → 書き出しモードの選択 → 書き出し、までを一通り。
+字幕は中国語＋英語、スタイル付きの元ファイルは同じディレクトリの `.ass` です。
+
 ## 3 つの実行形態
 
 | 形態        | 入口                         | バインディング   | 推論ランタイム        |

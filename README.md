@@ -21,6 +21,14 @@ Unity + Barracuda 跑 ResNet50 PoseNet；本仓库把整条管线搬到浏览器
 → 视频帧图集模式对比，末尾接纯 Rust CLI 的终端实录。
 字幕文件在 [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt)（`.ass` 是烧字幕用的样式版）。
 
+### 用法速览（英文界面 · 中英双语字幕 GIF）
+
+![SpineVExt 用法速览](docs/demo/spinevext-guide-en.gif)
+
+`docs/demo/spinevext-guide-en.gif`（1000×610 / 28 秒 / 2.3 MB）：英文界面走一遍
+载入视频 → 开始检测 → 实时跟随 → 选导出模式 → 导出的完整流程；
+字幕样式源文件在同一目录的 `.ass`。
+
 ## 三种运行形态
 
 | 形态        | 入口                         | 绑定方式       | 推理运行时            |

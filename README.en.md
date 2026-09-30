@@ -23,6 +23,14 @@ left, a Spine character following on the right → switch characters → upload 
 with the video-frame atlas mode, ending on a real terminal run of the pure-Rust CLI.
 Subtitles: [`docs/demo/spinevext-demo.srt`](docs/demo/spinevext-demo.srt) (`.ass` is the styled version used for burning).
 
+### Quick guide (English UI, bilingual subtitles)
+
+![SpineVExt quick guide](docs/demo/spinevext-guide-en.gif)
+
+`docs/demo/spinevext-guide-en.gif` (1000×610 / 28 s / 2.3 MB) walks through the English UI:
+pick a video → start detection → live follow → choose the export mode → export. Chinese + English
+subtitles; the styled source is the `.ass` next to it.
+
 ## Three ways to run it
 
 | Form          | Entry point                  | Binding              | Inference runtime      |
