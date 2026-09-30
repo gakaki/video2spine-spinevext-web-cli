@@ -5,13 +5,40 @@
 人物の動画（またはカメラ映像）を、[Spine](https://esotericsoftware.com/) でそのまま開ける
 **ボーンアニメーションプロジェクト**に変換します：`<プロジェクト名>.json` + `<プロジェクト名>.atlas` + `<プロジェクト名>.png`。
 
-Unity 製デスクトップツール **SpineVExt**（video → spine、作者 jcupdev）の再実装です。
-オリジナルは Unity + Barracuda で ResNet50 PoseNet を動かしていますが、本リポジトリは
-パイプライン全体をブラウザとコマンドラインへ移し、**アルゴリズムの中核（デコード・平滑化・
-ボーンマッピング・アニメ書き込み・Spine 書き出し・アトラス詰め込み）をすべて Rust で書き、
-1 つのコードを 3 通りにバインド**しています。
+**インスピレーション元は [SpineVExt](https://jcupdev.itch.io/spinevext)** —— jcupdev 氏の
+Unity 製デスクトップツール（video → spine、Unity + Barracuda で ResNet50 PoseNet）。
+詳しくは下の[「出典」](#出典-spinevext)へ。
+
+本リポジトリは移植でもフォークでもなく**独立した書き直し**です。パイプライン全体をブラウザと
+コマンドラインへ移し、**アルゴリズムの中核（デコード・平滑化・ボーンマッピング・アニメ書き込み・
+Spine 書き出し・アトラス詰め込み）をすべて Rust で書き、1 つのコードを 3 通りにバインド**しています。
 
 > 数式・オリジナルとの項目ごとの比較・踏んだ落とし穴は [`docs/原理.md`](docs/原理.md)（中国語）に。
+
+## 出典: SpineVExt
+
+**アイデアと機能の目標は [SpineVExt](https://jcupdev.itch.io/spinevext)（作者 jcupdev）から**：
+
+- ツールページ: [jcupdev.itch.io/spinevext](https://jcupdev.itch.io/spinevext)
+- v1.2 リリースノート: [Version 1.2 Release](https://jcupdev.itch.io/spinevext/devlog/667627/version-12-release)
+  （v1.1: [Version 1.1 Release](https://jcupdev.itch.io/spinevext/devlog/664575/version-11-release)）
+
+オリジナルは Unity 製のデスクトップツールで、動画やカメラ映像を入力に Barracuda で
+ResNet50 PoseNet を走らせ、キーポイントを Spine のボーンアニメーションへ変換します。
+Inspector には confidence / nmsRadius / maxPoses / GetBaseFrame / PropogateList といった
+パラメータがあります。本リポジトリはその考え方を UI と設定に残しており、見比べられます
+（項目ごとの対比は [`docs/原理.md`](docs/原理.md) 第 11 節）。
+
+関係性:
+
+- **原版のコードは含まない独立実装**：アルゴリズム中核は約 5 千行の Rust。
+  ブラウザ（wasm-bindgen + onnxruntime-web）とコマンドライン（napi-rs / 純 Rust CLI + tract-onnx）
+  の両方で動きます；
+- **追加したもの**：リアルタイム 2 画面（左は映像＋ボーン、右は Spine キャラが追従）、
+  キャラクタープロジェクト書き出し（動画の動きを自分のリグへリターゲット）、
+  ライト／ダークテーマ、中文 / English / 日本語 UI；
+- 内蔵デモキャラ **Spineboy** は Spine 公式サンプル由来（Spine Runtimes License）。
+  原版ツールとその素材の権利は jcupdev 氏に帰属します。
 
 ## デモ動画
 

@@ -5,13 +5,41 @@
 Turns a clip of a person (or your webcam) into a **skeletal animation project** you can open
 directly in [Spine](https://esotericsoftware.com/): `<project>.json` + `<project>.atlas` + `<project>.png`.
 
-It is a re-implementation of the Unity desktop tool **SpineVExt** (video → spine, by jcupdev).
-The original runs ResNet50 PoseNet on Unity + Barracuda; this repo moves the whole pipeline to the
+**Inspired by [SpineVExt](https://jcupdev.itch.io/spinevext)** — the Unity desktop tool by jcupdev
+(video → spine, running ResNet50 PoseNet on Unity + Barracuda). See
+[“Where this comes from”](#where-this-comes-from-spinevext) below.
+
+This is **not a port or a fork**: it is an independent rewrite that moves the whole pipeline to the
 browser and the command line, with **every algorithmic core (decode, smooth, rig mapping, animation
 baking, Spine export, atlas packing) written in Rust and bound three ways from one codebase**.
 
 > Formulas, a point-by-point comparison with the original, and the pitfalls we hit live in
 > [`docs/原理.md`](docs/原理.md) (Chinese).
+
+## Where this comes from: SpineVExt
+
+**The idea and the feature set come from [SpineVExt](https://jcupdev.itch.io/spinevext)** by jcupdev:
+
+- Tool page: [jcupdev.itch.io/spinevext](https://jcupdev.itch.io/spinevext)
+- v1.2 release notes: [Version 1.2 Release](https://jcupdev.itch.io/spinevext/devlog/667627/version-12-release)
+  (v1.1: [Version 1.1 Release](https://jcupdev.itch.io/spinevext/devlog/664575/version-11-release))
+
+The original is a Unity desktop tool: feed it a video or webcam, it runs ResNet50 PoseNet through
+Barracuda, turns the keypoints into a Spine skeletal animation, and exposes Inspector knobs
+(confidence / nmsRadius / maxPoses / GetBaseFrame / PropogateList). This repo deliberately keeps those
+concepts in its UI and config so you can compare side by side (item-by-item notes in section 11 of
+[`docs/原理.md`](docs/原理.md)).
+
+How this repo relates to it:
+
+- **an independent rewrite with none of the original code**: ~5k lines of Rust for the algorithm core,
+  running in the browser (wasm-bindgen + onnxruntime-web) and on the command line (napi-rs / pure-Rust
+  CLI + tract-onnx);
+- **what is added**: a live dual view (picture + bones on the left, a Spine character following on the
+  right), character-project export (retargeting the video motion onto your own rig), light/dark themes
+  and a 中文 / English / 日本語 UI;
+- the built-in **Spineboy** demo character comes from Spine’s official examples and follows the Spine
+  Runtimes License; the original tool and its assets remain jcupdev’s.
 
 ## Demo video
 

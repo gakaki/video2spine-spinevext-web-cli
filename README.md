@@ -5,12 +5,37 @@
 把一段人物视频（或摄像头画面）转成能在 [Spine](https://esotericsoftware.com/) 里直接打开的
 **骨骼动画工程**：`<工程名>.json` + `<工程名>.atlas` + `<工程名>.png`。
 
-这是 Unity 桌面工具 **SpineVExt**（video → spine，作者 jcupdev）的复刻。原版用
-Unity + Barracuda 跑 ResNet50 PoseNet；本仓库把整条管线搬到浏览器与命令行，
+**启发自 [SpineVExt](https://jcupdev.itch.io/spinevext)** —— jcupdev 做的 Unity 桌面工具
+（video → spine，用 Unity + Barracuda 跑 ResNet50 PoseNet）。见下面的
+[「启发来源」](#启发来源spinevext原版)。
+
+本仓库不是它的移植或分支，而是**独立重写**：把整条管线搬到浏览器与命令行，
 **所有算法核心（解码、平滑、骨骼映射、动画烘焙、Spine 导出、图集装箱）都用 Rust 写，
 一份代码绑定三次**。
 
 > 算法与公式、与原版的逐项对照、以及踩过的坑，见 [`docs/原理.md`](docs/原理.md)。
+
+## 启发来源：SpineVExt（原版）
+
+**灵感与功能目标都来自 [SpineVExt](https://jcupdev.itch.io/spinevext)**（作者 jcupdev）：
+
+- 工具页：[jcupdev.itch.io/spinevext](https://jcupdev.itch.io/spinevext)
+- 1.2 版发布说明：[Version 1.2 Release](https://jcupdev.itch.io/spinevext/devlog/667627/version-12-release)
+  （1.1：[Version 1.1 Release](https://jcupdev.itch.io/spinevext/devlog/664575/version-11-release)）
+
+原版是一个 Unity 桌面工具：输入人物视频 / 摄像头画面，用 Barracuda 跑 ResNet50 PoseNet 估计
+姿态，再把关键点转成 Spine 骨骼动画，界面上有 Inspector 参数（confidence / nmsRadius /
+maxPoses / GetBaseFrame / PropogateList 等）——本仓库的界面与配置项刻意保留了这些概念，
+方便对照（逐项对照写在 [`docs/原理.md`](docs/原理.md) 第 11 节）。
+
+与原版的关系：
+
+- **独立重写，不含原版代码**：算法核心是 Rust（约 5 千行），跑在浏览器（wasm-bindgen +
+  onnxruntime-web）和命令行（napi-rs / 纯 Rust CLI + tract-onnx）两条路上；
+- **多出来的部分**：实时双屏预览（左屏画面+骨架、右屏 Spine 角色跟着动）、角色工程导出
+  （把视频动作重定向到自己的角色骨骼）、白天/黑夜主题、中文/English/日本語 三语界面；
+- 内置演示角色 **Spineboy** 来自 Spine 官方示例，遵循 Spine Runtimes License；
+  原版工具与其素材的版权归 jcupdev 所有。
 
 ## 演示视频
 
