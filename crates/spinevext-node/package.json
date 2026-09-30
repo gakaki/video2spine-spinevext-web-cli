@@ -1,0 +1,18 @@
+{
+  "name": "spinevext-native",
+  "version": "1.2.0",
+  "private": true,
+  "description": "spinevext-core 的 napi-rs 原生绑定（Node / CLI 用）",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "napi": {
+    "binaryName": "spinevext-native",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-apple-darwin",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ]
+  }
+}

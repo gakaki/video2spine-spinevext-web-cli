@@ -1,0 +1,185 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * 视觉方向：动捕工作站的仪器面板。
+ *
+ * 两套主题共用同一个信号色（酸性柠檬绿）与等宽数字排版：
+ * * 白天 = 硫酸纸底 + 墨黑字 + 深一档的柠檬绿（保证白底上的对比度）
+ * * 黑夜 = 石墨黑底 + 冷白字 + 荧光柠檬绿
+ */
+:root {
+  /* 白天主题 */
+  color-scheme: light;
+  --background: #f5f6f2;
+  --foreground: #14181a;
+  --card: #ffffff;
+  --card-foreground: #14181a;
+  --popover: #ffffff;
+  --popover-foreground: #14181a;
+  --primary: #5f9c07;
+  --primary-foreground: #ffffff;
+  --secondary: #e6e9e2;
+  --secondary-foreground: #1c2224;
+  --muted: #eceee8;
+  --muted-foreground: #5f6b63;
+  --accent: #e9f5cf;
+  --accent-foreground: #2f4f00;
+  --destructive: #c2410c;
+  --border: #d6dad2;
+  --input: #e1e4dc;
+  --ring: #5f9c07;
+  --chart-1: #5f9c07;
+  --chart-2: #12a37f;
+  --chart-3: #c77700;
+  --chart-4: #c2410c;
+  --chart-5: #3f5fd6;
+  --radius: 0.375rem;
+  --sidebar: #eceee8;
+  --sidebar-foreground: #14181a;
+  --sidebar-primary: #5f9c07;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6e9e2;
+  --sidebar-accent-foreground: #1c2224;
+  --sidebar-border: #d6dad2;
+  --sidebar-ring: #5f9c07;
+
+  /* 仪器面板专用 */
+  --ink-grid: color-mix(in oklab, var(--foreground) 6%, transparent);
+  --signal: #b6ff2e;
+  --signal-dim: color-mix(in oklab, var(--signal) 35%, transparent);
+  --warn: #ffb02e;
+}
+
+.dark {
+  /* 黑夜主题 */
+  color-scheme: dark;
+  --background: #08090a;
+  --foreground: #e7ece8;
+  --card: #0f1213;
+  --card-foreground: #e7ece8;
+  --popover: #121616;
+  --popover-foreground: #e7ece8;
+  --primary: #b6ff2e;
+  --primary-foreground: #0b1004;
+  --secondary: #1a2021;
+  --secondary-foreground: #dfe6e1;
+  --muted: #16191a;
+  --muted-foreground: #7f8c88;
+  --accent: #17331c;
+  --accent-foreground: #c8ff6a;
+  --destructive: #ff5f45;
+  --border: #202728;
+  --input: #1c2324;
+  --ring: #b6ff2e;
+  --chart-1: #b6ff2e;
+  --chart-2: #43d9b4;
+  --chart-3: #ffb02e;
+  --chart-4: #ff5f45;
+  --chart-5: #6f8bff;
+  --sidebar: #0c0f10;
+  --sidebar-foreground: #e7ece8;
+  --sidebar-primary: #b6ff2e;
+  --sidebar-primary-foreground: #0b1004;
+  --sidebar-accent: #16191a;
+  --sidebar-accent-foreground: #dfe6e1;
+  --sidebar-border: #202728;
+  --sidebar-ring: #b6ff2e;
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--signal-dim);
+  }
+}
+
+@layer utilities {
+  /* 面板标题：等宽、全大写、拉开字距 */
+  .tag-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .numeral {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 舞台底纹：细网格 + 中心渐隐，营造测量台感觉 */
+  .stage-grid {
+    background-image:
+      linear-gradient(var(--ink-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ink-grid) 1px, transparent 1px),
+      radial-gradient(
+        circle at 50% 42%,
+        color-mix(in oklab, var(--signal) 7%, transparent),
+        transparent 62%
+      );
+    background-size:
+      32px 32px,
+      32px 32px,
+      100% 100%;
+  }
+
+  .hairline {
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}

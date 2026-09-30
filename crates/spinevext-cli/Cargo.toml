@@ -1,0 +1,29 @@
+[package]
+name = "spinevext-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "纯 Rust CLI：视频 → Spine 骨骼动画工程（不依赖 Node / 浏览器）"
+
+[[bin]]
+name = "spinevext"
+path = "src/main.rs"
+
+[dependencies]
+spinevext-core = { path = "../spinevext-core" }
+
+# 纯 Rust 的 ONNX 推理（Tiny, self-contained）
+# 0.21 是当前 rustc 1.93 能稳定编译的版本；ndarray 通过 prelude 的
+# `tract_ndarray` 重导出使用，不需要单独依赖。
+tract-onnx = "0.21"
+
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+# 诊断用：RUST_LOG=tract_core=debug 可以看到 tract 内部的符号解析过程
+env_logger = "0.11"
+
+# 纯 Rust 的图片与打包
+png = "0.17"
+zip = { version = "2", default-features = false, features = ["deflate"] }

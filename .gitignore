@@ -1,0 +1,46 @@
+# --- 原始 Unity 二进制（仅作逆向参考资料，不入库）---
+SpineVExtV1.2/
+SpineVExtV1.2.zip
+# 顺手挡掉误落地的大压缩包（本仓库的产物都是脚本生成的，没有需要入库的 zip）
+*.zip
+.DS_Store
+
+# --- Rust ---
+target/
+**/*.rs.bk
+# 注意：Cargo.lock **要**入库——这是应用仓库，锁住依赖才能复现构建
+
+# --- Node / Vite ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+coverage/
+
+# --- wasm-pack 产物（由 scripts/build-wasm.sh 生成）---
+src/wasm/pkg/
+crates/**/pkg/
+
+# --- napi-rs 产物（由 scripts/build-native.sh 生成）---
+# 只保留自动生成的 index.d.ts，方便 fresh clone 直接 typecheck
+native/index.js
+native/*.node
+
+# --- 姿态模型（由 `vp run model` 下载，带字节数与 sha256 校验）---
+public/models/
+
+# --- 本地临时文件 ---
+.tmp/
+.trash/
+exports/
+*.log
+
+# --- 编辑器 ---
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.vitest/
+
+# --- 本地验证素材（自测用，不入库）---
+.test-assets/

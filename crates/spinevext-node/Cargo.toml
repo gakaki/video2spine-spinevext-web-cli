@@ -1,0 +1,19 @@
+[package]
+name = "spinevext-node"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "spinevext-core 的 napi-rs 绑定：把同一份 Rust 核心暴露给 Node / TypeScript"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "3", default-features = false, features = ["napi8"] }
+napi-derive = "3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+spinevext-core = { path = "../spinevext-core" }
+
+[build-dependencies]
+napi-build = "2"

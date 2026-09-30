@@ -1,0 +1,16 @@
+[workspace]
+members = ["crates/spinevext-core", "crates/spinevext-node", "crates/spinevext-cli"]
+resolver = "2"
+
+[workspace.package]
+version = "1.2.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/local/spinevext-html5"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
